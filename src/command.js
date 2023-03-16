@@ -81,79 +81,79 @@ const commandHandlers = {
 };
 
 async function commandUpdateRole(message, command, subcommand) {
-  // 显示
-  if (subcommand==='show') {
-    const size = Object.getOwnPropertyNames(USER_DEFINE.ROLE).length;
-    if (size===0) {
-      return sendMessageToTelegram('还未定义任何角色');
-    }
-    let showMsg = `当前已定义的角色如下(${size}):\n`;
-    for (const role in USER_DEFINE.ROLE) {
-      if (USER_DEFINE.ROLE.hasOwnProperty(role)) {
-        showMsg+=`~${role}:\n<pre>`;
-        showMsg+=JSON.stringify(USER_DEFINE.ROLE[role])+'\n';
-        showMsg+='</pre>';
-      }
-    }
-    CURRENT_CHAT_CONTEXT.parse_mode = 'HTML';
-    return sendMessageToTelegram(showMsg);
+  // Show
+  if (subcommand === 'show') {
+  const size = Object.getOwnPropertyNames(USER_DEFINE.ROLE).length;
+  if (size === 0) {
+  return sendMessageToTelegram('No roles defined yet');
   }
-
-  const helpMsg = '格式错误: 命令完整格式为 `/role 操作`\n'+
-      '当前支持以下`操作`:\n'+
-      '`/role show` 显示当前定义的角色.\n'+
-      '`/role 角色名 del` 删除指定名称的角色.\n'+
-      '`/role 角色名 KEY=VALUE` 设置指定角色的配置.\n'+
-      ' 目前以下设置项:\n'+
-      '  `SYSTEM_INIT_MESSAGE`:初始化消息\n'+
-      '  `OPENAI_API_EXTRA_PARAMS`:OpenAI API 额外参数，必须为JSON';
-
+  let showMsg = `Currently defined roles (${size}):\n`;
+  for (const role in USER_DEFINE.ROLE) {
+  if (USER_DEFINE.ROLE.hasOwnProperty(role)) {
+  showMsg += `~${role}:\n<pre>`;
+  showMsg += JSON.stringify(USER_DEFINE.ROLE[role]) + '\n';
+  showMsg += '</pre>';
+  }
+  }
+  CURRENT_CHAT_CONTEXT.parse_mode = 'HTML';
+  return sendMessageToTelegram(showMsg);
+  }
+  
+  const helpMsg = 'Incorrect format: The complete command format is `/role action`\n' +
+  'The following actions are currently supported:\n' +
+  '/role show displays the currently defined roles.\n' +
+  '/role roleName del deletes the specified role.\n' +
+  '/role roleName KEY=VALUE sets the specified role configuration.\n' +
+  ' The following settings are currently available:\n' +
+  ' SYSTEM_INIT_MESSAGE: Initialization message\n' +
+  ' OPENAI_API_EXTRA_PARAMS: Additional OpenAI API parameters, must be JSON';
+  
   const kv = subcommand.indexOf(' ');
   if (kv === -1) {
-    return sendMessageToTelegram(helpMsg);
+  return sendMessageToTelegram(helpMsg);
   }
   const role = subcommand.slice(0, kv);
   const settings = subcommand.slice(kv + 1).trim();
   const skv = settings.indexOf('=');
   if (skv === -1) {
-    if (settings === 'del') { // 删除
-      try {
-        if (USER_DEFINE.ROLE[role]) {
-          delete USER_DEFINE.ROLE[role];
-          await DATABASE.put(
-              SHARE_CONTEXT.configStoreKey,
-              JSON.stringify(Object.assign(USER_CONFIG, {USER_DEFINE: USER_DEFINE})),
-          );
-          return sendMessageToTelegram('Delete role successfully');
-        }
-      } catch (e) {
-        return sendMessageToTelegram(`Delete role successfully: \`${e.message}\``);
+  if (settings === 'del') { // 删除
+    try {
+      if (USER_DEFINE.ROLE[role]) {
+        delete USER_DEFINE.ROLE[role];
+        await DATABASE.put(
+            SHARE_CONTEXT.configStoreKey,
+            JSON.stringify(Object.assign(USER_CONFIG, {USER_DEFINE: USER_DEFINE})),
+        );
+        return sendMessageToTelegram('Delete role successfully');
       }
+    } catch (e) {
+      return sendMessageToTelegram(`Delete role successfully: \`${e.message}\``);
     }
-    return sendMessageToTelegram(helpMsg);
   }
-  const key = settings.slice(0, skv);
-  const value = settings.slice(skv + 1);
+  return sendMessageToTelegram(helpMsg);
+}
+const key = settings.slice(0, skv);
+const value = settings.slice(skv + 1);
 
-  // ROLE结构定义
-  if (!USER_DEFINE.ROLE[role]) {
-    USER_DEFINE.ROLE[role] = {
-      // 系统初始化消息
-      SYSTEM_INIT_MESSAGE: ENV.SYSTEM_INIT_MESSAGE,
-      // OpenAI API 额外参数
-      OPENAI_API_EXTRA_PARAMS: {},
-    };
-  }
-  try {
-    mergeConfig(USER_DEFINE.ROLE[role], key, value);
-    await DATABASE.put(
-        SHARE_CONTEXT.configStoreKey,
-        JSON.stringify(Object.assign(USER_CONFIG, {USER_DEFINE: USER_DEFINE})),
-    );
-    return sendMessageToTelegram('更新配置成功');
-  } catch (e) {
-    return sendMessageToTelegram(`配置项格式错误: \`${e.message}\``);
-  }
+// ROLE结构定义
+if (!USER_DEFINE.ROLE[role]) {
+  USER_DEFINE.ROLE[role] = {
+    // 系统初始化消息
+    SYSTEM_INIT_MESSAGE: ENV.SYSTEM_INIT_MESSAGE,
+    // OpenAI API 额外参数
+    OPENAI_API_EXTRA_PARAMS: {},
+  };
+}
+try {
+  mergeConfig(USER_DEFINE.ROLE[role], key, value);
+  await DATABASE.put(
+      SHARE_CONTEXT.configStoreKey,
+      JSON.stringify(Object.assign(USER_CONFIG, {USER_DEFINE: USER_DEFINE})),
+  );
+  return sendMessageToTelegram('更新配置成功');
+} catch (e) {
+  return sendMessageToTelegram(`配置项格式错误: \`${e.message}\``);
+}
 }
 
 async function commandGenerateImg(message, command, subcommand) {
@@ -287,8 +287,8 @@ async function commandUsage() {
 }
 
 async function commandSystem(message) {
-  let msg = '当前系统信息如下:\n';
-  msg+='OpenAI模型:'+ENV.CHAT_MODEL+'\n';
+  let msg = 'Current system information:\n';
+  msg+='OpenAI model:'+ENV.CHAT_MODEL+'\n';
   if (ENV.DEBUG_MODE) {
     msg+='<pre>';
     msg+=`USER_CONFIG: \n${JSON.stringify(USER_CONFIG, null, 2)}\n`;
@@ -315,40 +315,40 @@ async function commandEcho(message) {
 export async function handleCommandMessage(message) {
   if (ENV.DEV_MODE) {
     commandHandlers['/echo'] = {
-      help: '[DEBUG ONLY]回显消息',
+      help: '[DEBUG ONLY]echo',
       scopes: ['all_private_chats', 'all_chat_administrators'],
       fn: commandEcho,
       needAuth: commandAuthCheck.default,
     };
   }
   for (const key in commandHandlers) {
-    if (message.text === key || message.text.startsWith(key + ' ')) {
-      const command = commandHandlers[key];
-      try {
-        // 如果存在权限条件
-        if (command.needAuth) {
-          const roleList = command.needAuth();
-          if (roleList) {
-            // 获取身份并判断
-            const chatRole = await getChatRole(SHARE_CONTEXT.speakerId);
-            if (chatRole === null) {
-              return sendMessageToTelegram('身份权限验证失败');
-            }
-            if (!roleList.includes(chatRole)) {
-              return sendMessageToTelegram(`权限不足,需要${roleList.join(',')},当前:${chatRole}`);
-            }
-          }
-        }
-      } catch (e) {
-        return sendMessageToTelegram(`身份验证出错:` + e.message);
-      }
-      const subcommand = message.text.substring(key.length).trim();
-      try {
-        return await command.fn(message, key, subcommand);
-      } catch (e) {
-        return sendMessageToTelegram(`命令执行错误: ${e.message}`);
-      }
-    }
+  if (message.text === key || message.text.startsWith(key + ' ')) {
+  const command = commandHandlers[key];
+  try {
+  // If there is an authorization condition
+  if (command.needAuth) {
+  const roleList = command.needAuth();
+  if (roleList) {
+  // Get the identity and judge
+  const chatRole = await getChatRole(SHARE_CONTEXT.speakerId);
+  if (chatRole === null) {
+  return sendMessageToTelegram('Identity authorization failed');
+  }
+  if (!roleList.includes(chatRole)) {
+  return sendMessageToTelegram(`Insufficient permissions, required ${roleList.join(',')}, current: ${chatRole}`);
+  }
+  }
+  }
+  } catch (e) {
+  return sendMessageToTelegram(`Identity verification error:` + e.message);
+  }
+  const subcommand = message.text.substring(key.length).trim();
+  try {
+  return await command.fn(message, key, subcommand);
+  } catch (e) {
+  return sendMessageToTelegram(`Command execution error: ${e.message}`);
+  }
+  }
   }
   return null;
 }

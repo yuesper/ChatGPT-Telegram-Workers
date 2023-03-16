@@ -1,47 +1,46 @@
 import {DATABASE, ENV, CONST} from './env.js';
-
-// 用户配置
+// User configuration
 export const USER_CONFIG = {
-  // 系统初始化消息
+  // System initialization message
   SYSTEM_INIT_MESSAGE: ENV.SYSTEM_INIT_MESSAGE,
-  // OpenAI API 额外参数
+  // OpenAI API additional parameters
   OPENAI_API_EXTRA_PARAMS: {},
-};
-
-export const USER_DEFINE = {
-  // 自定义角色
+  };
+  
+  export const USER_DEFINE = {
+  // Custom roles
   ROLE: {},
-};
-
-// 当前聊天上下文
-export const CURRENT_CHAT_CONTEXT = {
+  };
+  
+  // Current chat context
+  export const CURRENT_CHAT_CONTEXT = {
   chat_id: null,
-  reply_to_message_id: null, // 如果是群组，这个值为消息ID，否则为null
+  reply_to_message_id: null, // If it's a group, this value is the message ID, otherwise it's null
   parse_mode: 'Markdown',
-};
-
-// 共享上下文
-export const SHARE_CONTEXT = {
-  currentBotId: null, // 当前机器人 ID
-  currentBotToken: null, // 当前机器人 Token
-  currentBotName: null, // 当前机器人名称: xxx_bot
+  };
+  
+  // Shared context
+  export const SHARE_CONTEXT = {
+  currentBotId: null, // Current bot ID
+  currentBotToken: null, // Current bot Token
+  currentBotName: null, // Current bot name: xxx_bot
   chatHistoryKey: null, // history:chat_id:bot_id:(from_id)
   configStoreKey: null, // user_config:chat_id:bot_id:(from_id)
   groupAdminKey: null, // group_admin:group_id
   usageKey: null, // usage:bot_id
-  chatType: null, // 会话场景, private/group/supergroup 等, 来源 message.chat.type
-  chatId: null, // 会话 id, private 场景为发言人 id, group/supergroup 场景为群组 id
-  speakerId: null, // 发言人 id
-};
-
-
-function initChatContext(chatId, replyToMessageId) {
+  chatType: null, // Conversation scene, private/group/supergroup, etc., from message.chat.type
+  chatId: null, // Conversation id, private scene for the speaker id, group/supergroup scene for the group id
+  speakerId: null, // Speaker id
+  };
+  
+  
+  function initChatContext(chatId, replyToMessageId) {
   CURRENT_CHAT_CONTEXT.chat_id = chatId;
   CURRENT_CHAT_CONTEXT.reply_to_message_id = replyToMessageId;
   if (replyToMessageId) {
-    CURRENT_CHAT_CONTEXT.allow_sending_without_reply = true;
+  CURRENT_CHAT_CONTEXT.allow_sending_without_reply = true;
   }
-}
+  }
 
 // 初始化用户配置
 async function initUserConfig(storeKey) {

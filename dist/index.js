@@ -4,139 +4,139 @@ var ENV_VALUE_TYPE = {
 };
 var ENV = {
   // OpenAI API Key
-  API_KEY: null,
-  // OpenAI的模型名称
-  CHAT_MODEL: "gpt-3.5-turbo",
-  // 允许访问的Telegram Token， 设置时以逗号分隔
-  TELEGRAM_AVAILABLE_TOKENS: [],
-  // 允许访问的Telegram Token 对应的Bot Name， 设置时以逗号分隔
-  TELEGRAM_BOT_NAME: [],
-  // 允许所有人使用
-  I_AM_A_GENEROUS_PERSON: false,
-  // 白名单
-  CHAT_WHITE_LIST: [],
-  // 群组白名单
-  CHAT_GROUP_WHITE_LIST: [],
-  // 群组机器人开关
-  GROUP_CHAT_BOT_ENABLE: true,
-  // 群组机器人共享模式,关闭后，一个群组只有一个会话和配置。开启的话群组的每个人都有自己的会话上下文
-  GROUP_CHAT_BOT_SHARE_MODE: false,
-  // 为了避免4096字符限制，将消息删减
-  AUTO_TRIM_HISTORY: true,
-  // 最大历史记录长度
-  MAX_HISTORY_LENGTH: 20,
-  // 最大消息长度
-  MAX_TOKEN_LENGTH: 2048,
-  // 使用GPT3的TOKEN计数
-  GPT3_TOKENS_COUNT: true,
-  // 全局默认初始化消息
-  SYSTEM_INIT_MESSAGE: "\u4F60\u662F\u4E00\u4E2A\u5F97\u529B\u7684\u52A9\u624B",
-  // 全局默认初始化消息角色
-  SYSTEM_INIT_MESSAGE_ROLE: "system",
-  // 是否开启使用统计
-  ENABLE_USAGE_STATISTICS: false,
-  // 隐藏部分命令按钮
-  HIDE_COMMAND_BUTTONS: [],
-  // 检查更新的分支
-  UPDATE_BRANCH: "master",
-  // 当前版本
-  BUILD_TIMESTAMP: 1678945730,
-  // 当前版本 commit id
-  BUILD_VERSION: "9e23846",
-  // DEBUG 专用
-  // 调试模式
-  DEBUG_MODE: false,
-  // 开发模式
-  DEV_MODE: false,
-  // 本地调试专用
-  TELEGRAM_API_DOMAIN: "https://api.telegram.org",
-  OPENAI_API_DOMAIN: "https://api.openai.com"
+API_KEY: null,
+// OpenAI Model Name
+CHAT_MODEL: "gpt-3.5-turbo",
+// Allowed Telegram Tokens, separated by commas when setting
+TELEGRAM_AVAILABLE_TOKENS: [],
+// Allowed Telegram Token Corresponding Bot Name, separated by commas when setting
+TELEGRAM_BOT_NAME: [],
+// Allow everyone to use
+I_AM_A_GENEROUS_PERSON: true,
+// Whitelist
+CHAT_WHITE_LIST: [],
+// Group whitelist
+CHAT_GROUP_WHITE_LIST: [],
+// Group bot switch
+GROUP_CHAT_BOT_ENABLE: true,
+// Group bot sharing mode, when closed, a group has only one conversation and configuration. When turned on, each person in the group has their own conversation context
+GROUP_CHAT_BOT_SHARE_MODE: false,
+// To avoid 4096 character limit, truncate the message
+AUTO_TRIM_HISTORY: true,
+// Maximum history length
+MAX_HISTORY_LENGTH: 20,
+// Maximum message length
+MAX_TOKEN_LENGTH: 2048,
+// Use GPT3's TOKEN count
+GPT3_TOKENS_COUNT: true,
+// Global default initialization message
+SYSTEM_INIT_MESSAGE: "\u4F60\u662F\u4E00\u4E2A\u5F97\u529B\u7684\u52A9\u624B",
+// Global default initialization message role
+SYSTEM_INIT_MESSAGE_ROLE: "system",
+// Enable usage statistics
+ENABLE_USAGE_STATISTICS: false,
+// Hide some command buttons
+HIDE_COMMAND_BUTTONS: [],
+// Update branch to check
+UPDATE_BRANCH: "master",
+// Current version
+BUILD_TIMESTAMP: 1678945730,
+// Current version commit id
+BUILD_VERSION: "9e23846",
+// DEBUG only
+// Debug mode
+DEBUG_MODE: false,
+// Development mode
+DEV_MODE: false,
+// Local debugging only
+TELEGRAM_API_DOMAIN: "https://api.telegram.org",
+OPENAI_API_DOMAIN: "https://api.openai.com"
 };
 var CONST = {
-  PASSWORD_KEY: "chat_history_password",
-  GROUP_TYPES: ["group", "supergroup"],
-  USER_AGENT: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15"
+PASSWORD_KEY: "chat_history_password",
+GROUP_TYPES: ["group", "supergroup"],
+USER_AGENT: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15"
 };
 var DATABASE = null;
 function initEnv(env) {
-  DATABASE = env.DATABASE;
-  for (const key in ENV) {
+DATABASE = env.DATABASE;
+for (const key in ENV) {
     if (env[key]) {
-      switch (ENV_VALUE_TYPE[key] || typeof ENV[key]) {
+    switch (ENV_VALUE_TYPE[key] || typeof ENV[key]) {
         case "number":
-          ENV[key] = parseInt(env[key]) || ENV[key];
-          break;
+        ENV[key] = parseInt(env[key]) || ENV[key];
+        break;
         case "boolean":
-          ENV[key] = (env[key] || "false") === "true";
-          break;
+        ENV[key] = (env[key] || "false") === "true";
+        break;
         case "string":
-          ENV[key] = env[key];
-          break;
+        ENV[key] = env[key];
+        break;
         case "object":
-          if (Array.isArray(ENV[key])) {
+        if (Array.isArray(ENV[key])) {
             ENV[key] = env[key].split(",");
-          } else {
+        } else {
             try {
-              ENV[key] = JSON.parse(env[key]);
+            ENV[key] = JSON.parse(env[key]);
             } catch (e) {
-              console.error(e);
+            console.error(e);
             }
-          }
-          break;
+        }
+        break;
         default:
-          ENV[key] = env[key];
-          break;
-      }
+        ENV[key] = env[key];
+        break;
     }
-  }
-  {
+    }
+}
+{
     if (env.TELEGRAM_TOKEN && !ENV.TELEGRAM_AVAILABLE_TOKENS.includes(env.TELEGRAM_TOKEN)) {
-      if (env.BOT_NAME && ENV.TELEGRAM_AVAILABLE_TOKENS.length === ENV.TELEGRAM_BOT_NAME.length) {
+    if (env.BOT_NAME && ENV.TELEGRAM_AVAILABLE_TOKENS.length === ENV.TELEGRAM_BOT_NAME.length) {
         ENV.TELEGRAM_BOT_NAME.push(env.BOT_NAME);
-      }
-      ENV.TELEGRAM_AVAILABLE_TOKENS.push(env.TELEGRAM_TOKEN);
     }
-  }
+    ENV.TELEGRAM_AVAILABLE_TOKENS.push(env.TELEGRAM_TOKEN);
+    }
+}
 }
 
 // src/context.js
 var USER_CONFIG = {
-  // 系统初始化消息
-  SYSTEM_INIT_MESSAGE: ENV.SYSTEM_INIT_MESSAGE,
-  // OpenAI API 额外参数
-  OPENAI_API_EXTRA_PARAMS: {}
+// System initialization message
+SYSTEM_INIT_MESSAGE: ENV.SYSTEM_INIT_MESSAGE,
+// OpenAI API additional parameters
+OPENAI_API_EXTRA_PARAMS: {}
 };
 var USER_DEFINE = {
-  // 自定义角色
-  ROLE: {}
+// Custom roles
+ROLE: {}
 };
 var CURRENT_CHAT_CONTEXT = {
-  chat_id: null,
-  reply_to_message_id: null,
-  // 如果是群组，这个值为消息ID，否则为null
-  parse_mode: "Markdown"
+chat_id: null,
+reply_to_message_id: null,
+// If it's a group, this value is the message ID, otherwise it's null
+parse_mode: "Markdown"
 };
 var SHARE_CONTEXT = {
-  currentBotId: null,
-  // 当前机器人 ID
-  currentBotToken: null,
-  // 当前机器人 Token
-  currentBotName: null,
-  // 当前机器人名称: xxx_bot
-  chatHistoryKey: null,
-  // history:chat_id:bot_id:(from_id)
-  configStoreKey: null,
-  // user_config:chat_id:bot_id:(from_id)
-  groupAdminKey: null,
-  // group_admin:group_id
-  usageKey: null,
-  // usage:bot_id
-  chatType: null,
-  // 会话场景, private/group/supergroup 等, 来源 message.chat.type
-  chatId: null,
-  // 会话 id, private 场景为发言人 id, group/supergroup 场景为群组 id
-  speakerId: null
-  // 发言人 id
+currentBotId: null,
+// Current bot ID
+currentBotToken: null,
+// Current bot Token
+currentBotName: null,
+// Current bot name: xxx_bot
+chatHistoryKey: null,
+// history:chat_id:bot_id:(from_id)
+configStoreKey: null,
+// user_config:chat_id:bot_id:(from_id)
+groupAdminKey: null,
+// group_admin:group_id
+usageKey: null,
+// usage:bot_id
+chatType: null,
+// Conversation scene, private/group/supergroup, etc., from message.chat.type
+chatId: null,
+// Conversation id, private scene for the speaker id, group/supergroup scene for the group id
+speakerId: null
+// Speaker id
 };
 function initChatContext(chatId, replyToMessageId) {
   CURRENT_CHAT_CONTEXT.chat_id = chatId;
@@ -922,7 +922,7 @@ async function commandFetchUpdate(message, command, subcommand) {
     ts: ENV.BUILD_TIMESTAMP,
     sha: ENV.BUILD_VERSION
   };
-  const repo = `https://raw.githubusercontent.com/TBXark/ChatGPT-Telegram-Workers/${ENV.UPDATE_BRANCH}`;
+  const repo = `https://raw.githubusercontent.com/yuesper/ChatGPT-Telegram-Workers/${ENV.UPDATE_BRANCH}`;
   const ts = `${repo}/dist/timestamp`;
   const info = `${repo}/dist/buildinfo.json`;
   let online = await fetch(info, config).then((r) => r.json()).catch(() => null);
