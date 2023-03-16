@@ -3,56 +3,56 @@ const ENV_VALUE_TYPE = {
 };
 
 export const ENV = {
-  // OpenAI API Key
-  API_KEY: null,
-  // OpenAI的模型名称
-  CHAT_MODEL: 'gpt-3.5-turbo',
+ // OpenAI API Key
+API_KEY: null,
+// OpenAI model name
+CHAT_MODEL: 'gpt-3.5-turbo',
 
-  // 允许访问的Telegram Token， 设置时以逗号分隔
-  TELEGRAM_AVAILABLE_TOKENS: [],
-  // 允许访问的Telegram Token 对应的Bot Name， 设置时以逗号分隔
-  TELEGRAM_BOT_NAME: [],
+// Allowed Telegram Tokens, separated by commas when setting
+TELEGRAM_AVAILABLE_TOKENS: [],
+// Allowed Telegram Token corresponding Bot Name, separated by commas when setting
+TELEGRAM_BOT_NAME: [],
 
-  // 允许所有人使用
-  I_AM_A_GENEROUS_PERSON: false,
-  // 白名单
-  CHAT_WHITE_LIST: [],
-  // 群组白名单
-  CHAT_GROUP_WHITE_LIST: [],
+// Allow everyone to use
+I_AM_A_GENEROUS_PERSON: false,
+// Whitelist
+CHAT_WHITE_LIST: [],
+// Group whitelist
+CHAT_GROUP_WHITE_LIST: [],
 
-  // 群组机器人开关
-  GROUP_CHAT_BOT_ENABLE: true,
-  // 群组机器人共享模式,关闭后，一个群组只有一个会话和配置。开启的话群组的每个人都有自己的会话上下文
-  GROUP_CHAT_BOT_SHARE_MODE: false,
+// Group chat bot switch
+GROUP_CHAT_BOT_ENABLE: true,
+// Group chat bot sharing mode, when closed, a group only has one conversation and configuration. When opened, each person in the group has their own conversation context
+GROUP_CHAT_BOT_SHARE_MODE: false,
 
-  // 为了避免4096字符限制，将消息删减
-  AUTO_TRIM_HISTORY: true,
-  // 最大历史记录长度
-  MAX_HISTORY_LENGTH: 20,
-  // 最大消息长度
-  MAX_TOKEN_LENGTH: 2048,
-  // 使用GPT3的TOKEN计数
-  GPT3_TOKENS_COUNT: true,
+// To avoid the 4096 character limit, trim the message
+AUTO_TRIM_HISTORY: true,
+// Maximum history length
+MAX_HISTORY_LENGTH: 20,
+// Maximum message length
+MAX_TOKEN_LENGTH: 2048,
+// Use GPT3 TOKEN count
+GPT3_TOKENS_COUNT: true,
 
-  // 全局默认初始化消息
-  SYSTEM_INIT_MESSAGE: '你是一个得力的助手',
-  // 全局默认初始化消息角色
-  SYSTEM_INIT_MESSAGE_ROLE: 'system',
-  // 是否开启使用统计
-  ENABLE_USAGE_STATISTICS: false,
-  // 隐藏部分命令按钮
-  HIDE_COMMAND_BUTTONS: [],
+// Global default initialization message
+SYSTEM_INIT_MESSAGE: 'You are a capable assistant',
+// Global default initialization message role
+SYSTEM_INIT_MESSAGE_ROLE: 'system',
+// Enable usage statistics
+ENABLE_USAGE_STATISTICS: false,
+// Hide some command buttons
+HIDE_COMMAND_BUTTONS: [],
 
-  // 检查更新的分支
-  UPDATE_BRANCH: 'master',
-  // 当前版本
-  BUILD_TIMESTAMP: process.env.BUILD_TIMESTAMP || 0,
-  // 当前版本 commit id
-  BUILD_VERSION: process.env.BUILD_VERSION || '',
+// Branch to check for updates
+UPDATE_BRANCH: 'master',
+// Current version
+BUILD_TIMESTAMP: process.env.BUILD_TIMESTAMP || 0,
+// Current version commit id
+BUILD_VERSION: process.env.BUILD_VERSION || '',
 
-  // DEBUG 专用
-  // 调试模式
-  DEBUG_MODE: false,
+// DEBUG dedicated
+// Debug mode
+DEBUG_MODE: false,
   // 开发模式
   DEV_MODE: false,
   // 本地调试专用

@@ -26,7 +26,7 @@ export async function sendMessageToTelegram(message, token, context) {
   if (message.length<=4096) {
     return await sendMessage(message, botToken, chatContext);
   }
-  console.log('消息将分段发送');
+  console.log('The message will be sent in segments');
   const limit = 4000;
   chatContext.parse_mode = 'HTML';
   for (let i = 0; i < message.length; i += limit) {

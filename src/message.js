@@ -48,7 +48,7 @@ async function msgFilterWhiteList(message) {
     // 白名单判断
     if (!ENV.CHAT_WHITE_LIST.includes(`${CURRENT_CHAT_CONTEXT.chat_id}`)) {
       return sendMessageToTelegram(
-          `你没有权限使用这个命令, 请请联系管理员添加你的ID(${CURRENT_CHAT_CONTEXT.chat_id})到白名单`,
+          `You do not have permission to use this command, please contact the administrator to add your ID(${CURRENT_CHAT_CONTEXT.chat_id}) to the whitelist`,
       );
     }
     return null;
@@ -63,20 +63,20 @@ async function msgFilterWhiteList(message) {
     // 白名单判断
     if (!ENV.CHAT_GROUP_WHITE_LIST.includes(`${CURRENT_CHAT_CONTEXT.chat_id}`)) {
       return sendMessageToTelegram(
-          `该群未开启聊天权限, 请请联系管理员添加群ID(${CURRENT_CHAT_CONTEXT.chat_id})到白名单`,
+          `This group has not enabled chat permissions, please contact the administrator to add the group ID(${CURRENT_CHAT_CONTEXT.chat_id}) to the whitelist`,
       );
     }
     return null;
   }
   return sendMessageToTelegram(
-      `暂不支持该类型(${SHARE_CONTEXT.chatType})的聊天`,
+      `Temporarily does not support this type (${SHARE_CONTEXT.chatType}) of chat`,
   );
 }
 
 // 过滤非文本消息
 async function msgFilterNonTextMessage(message) {
   if (!message.text) {
-    return sendMessageToTelegram('暂不支持非文本格式消息');
+    return sendMessageToTelegram('Does not support non-text format messages');
   }
   return null;
 }
@@ -232,7 +232,7 @@ export async function msgProcessByChatType(message) {
   };
   if (!handlerMap.hasOwnProperty(SHARE_CONTEXT.chatType)) {
     return sendMessageToTelegram(
-        `暂不支持该类型(${SHARE_CONTEXT.chatType})的聊天`,
+        `Does not support this type (${SHARE_CONTEXT.chatType})`,
     );
   }
   const handlers = handlerMap[SHARE_CONTEXT.chatType];
@@ -245,7 +245,7 @@ export async function msgProcessByChatType(message) {
     } catch (e) {
       console.error(e);
       return sendMessageToTelegram(
-          `处理(${SHARE_CONTEXT.chatType})的聊天消息出错`,
+          `Error processing (${SHARE_CONTEXT.chatType}) chat message`,
       );
     }
   }
